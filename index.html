@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>URLジャンプサイト</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+        input { padding: 10px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <h1>サイトを開く</h1>
+    <p>URLを入力してボタンを押してください（例: https://www.google.com）</p>
+    
+    <!-- 入力欄 -->
+    <input type="text" id="urlInput" placeholder="https://">
+    
+    <!-- ボタン -->
+    <button onclick="openSite()">移動する</button>
+
+    <script>
+        function openSite() {
+            // 入力された値を取得
+            let url = document.getElementById('urlInput').value;
+
+            // URLが空でないか確認
+            if (url) {
+                // httpから始まっていない場合、自動で追加する処理（簡易版）
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = 'https://' + url;
+                }
+                // 指定したURLを新しいタブで開く
+                window.open(url, '_blank');
+            } else {
+                alert('URLを入力してください');
+            }
+        }
+    </script>
+
+</body>
+</html>
