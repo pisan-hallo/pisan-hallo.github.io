@@ -2,60 +2,39 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>全画面URLジャンプ</title>
+    <title>タブ内全画面表示</title>
     <style>
-        /* 背景を黒にして没入感を出すスタイル */
-        body { 
-            background-color: #222; 
-            color: white; 
-            font-family: sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            margin: 0; 
-        }
-        input { width: 350px; padding: 12px; border-radius: 5px; border: none; font-size: 18px; }
-        button { 
-            margin-top: 20px; 
-            padding: 12px 24px; 
-            font-size: 18px; 
-            background-color: #007bff; 
-            color: white; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-        }
-        button:hover { background-color: #0056b3; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
+        #controls { position: absolute; top: 10px; left: 10px; z-index: 100; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 5px; }
+        input { padding: 5px; width: 250px; }
+        iframe { width: 100vw; height: 100vh; border: none; display: none; }
     </style>
 </head>
 <body>
 
-    <h1>URLを入力して全画面で起動</h1>
-    
-    <input type="text" id="urlInput" placeholder="https://example.com" value="https://">
-    <button onclick="launch()">サイトを開いて全画面化</button>
+    <div id="controls">
+        <input type="text" id="urlInput" placeholder="https://example.com">
+        <button onclick="loadSite()">この画面で開く</button>
+    </div>
+
+    <iframe id="siteFrame"></iframe>
 
     <script>
-        function launch() {
+        function loadSite() {
             let url = document.getElementById('urlInput').value;
-
-            if (url && url !== "https://") {
-                // 1. 新しいタブでサイトを開く
-                window.open(url, '_blank');
-
-                // 2. この操作画面自体を全画面にする
+            if (url) {
+                if (!url.startsWith('http')) url = 'https://' + url;
+                
+                const frame = document.getElementById('siteFrame');
+                frame.src = url;
+                frame.style.display = 'block';
+                
+                // 全画面化を試みる
                 if (document.documentElement.requestFullscreen) {
                     document.documentElement.requestFullscreen();
-                } else if (document.documentElement.webkitRequestFullscreen) { /* Safari用 */
-                    document.documentElement.webkitRequestFullscreen();
                 }
-            } else {
-                alert('有効なURLを入力してください');
             }
         }
     </script>
-
 </body>
 </html>
