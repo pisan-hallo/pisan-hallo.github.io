@@ -2,49 +2,57 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>埋め込みURL表示サイト</title>
+    <title>全画面URLジャンプ</title>
     <style>
-        body { font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
-        .controls { margin-bottom: 20px; }
-        input { padding: 10px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 10px 20px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 4px; }
-        
-        /* サイトを表示する枠のスタイル */
-        #siteViewer {
-            width: 90%;
-            height: 500px; /* 表示する高さ */
-            margin: 0 auto;
-            border: 2px solid #ddd;
-            background-color: #f9f9f9;
+        /* 背景を黒にして没入感を出すスタイル */
+        body { 
+            background-color: #222; 
+            color: white; 
+            font-family: sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
         }
+        input { width: 350px; padding: 12px; border-radius: 5px; border: none; font-size: 18px; }
+        button { 
+            margin-top: 20px; 
+            padding: 12px 24px; 
+            font-size: 18px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+        button:hover { background-color: #0056b3; }
     </style>
 </head>
 <body>
 
-    <h1>サイトビューアー</h1>
+    <h1>URLを入力して全画面で起動</h1>
     
-    <div class="controls">
-        <input type="text" id="urlInput" placeholder="https://example.com">
-        <button onclick="displaySite()">ここで開く</button>
-    </div>
-
-    <!-- サイトを表示するための枠（iframe） -->
-    <iframe id="siteViewer" src="about:blank"></iframe>
+    <input type="text" id="urlInput" placeholder="https://example.com" value="https://">
+    <button onclick="launch()">サイトを開いて全画面化</button>
 
     <script>
-        function displaySite() {
+        function launch() {
             let url = document.getElementById('urlInput').value;
 
-            if (url) {
-                // URLの整形（httpから始まっていない場合）
-                if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                    url = 'https://' + url;
+            if (url && url !== "https://") {
+                // 1. 新しいタブでサイトを開く
+                window.open(url, '_blank');
+
+                // 2. この操作画面自体を全画面にする
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) { /* Safari用 */
+                    document.documentElement.webkitRequestFullscreen();
                 }
-                
-                // iframeのsrc属性を書き換えてサイトを表示
-                document.getElementById('siteViewer').src = url;
             } else {
-                alert('URLを入力してください');
+                alert('有効なURLを入力してください');
             }
         }
     </script>
